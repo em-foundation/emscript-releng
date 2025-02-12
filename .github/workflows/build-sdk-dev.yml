@@ -142,3 +142,17 @@ jobs:
           git commit -m "build-sdk run"
           git push
           popd
+
+      - name: Tag repos
+        run: |
+          VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
+          for repo in "releng tools content docs sdk"
+          do
+            pushd emscript-$repo
+            git config --global user.name 'build-sdk.yml workflow'
+            git config --global user.email 'hello@openem.org'
+            git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-$repo.git
+            git tag $VERSION_WITH_TIMESTAMP
+            git push --tags
+            popd
+          done
