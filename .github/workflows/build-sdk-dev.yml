@@ -134,7 +134,7 @@ jobs:
           pushd emscript-sdk
           git config --global user.name 'build-sdk.yml workflow'
           git config --global user.email 'hello@openem.org'
-          git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/$GITHUB_REPOSITORY
+          git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-sdk.git
           git add --all
           git status
           git commit -m "build-sdk run"
