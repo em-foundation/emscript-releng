@@ -74,6 +74,7 @@ jobs:
         run: |
           VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
           pushd emscript-tools
+          npm install
           npm run build-cli
           npm run cli-executable
           sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/cli/Main.js
