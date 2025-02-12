@@ -70,19 +70,6 @@ jobs:
           cp emscript-content/.clang-format emscript-sdk/
           cp emscript-content/tsconfig.base.json emscript-sdk/
 
-      - name: Build VScode extension
-        run: |
-          VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
-          pushd emscript-tools
-          npm install
-          npm version --git-tag-version=false --allow-same-version=true ${{ vars.VERSION }}
-          npm run build-ext
-          sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/ext/extension.js
-          npx vsce package
-          popd
-          rm -f emscript-sdk/emscript*.vsix
-          cp emscript-tools/emscript-${{ vars.VERSION }}.vsix emscript-sdk/emscript-$VERSION_WITH_TIMESTAMP.vsix
-
       - name: Build emscript cli
         run: |
           VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
@@ -111,7 +98,20 @@ jobs:
           repository: em-foundation/npm-packages
           token: ${{ secrets.token }}
           tag_name: resources
-
+  
+      - name: Build VScode extension
+        run: |
+          VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
+          pushd emscript-tools
+          npm install
+          npm version --git-tag-version=false --allow-same-version=true ${{ vars.VERSION }}
+          npm run build-ext
+          sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/ext/extension.js
+          npx vsce package
+          popd
+          rm -f emscript-sdk/emscript*.vsix
+          cp emscript-tools/emscript-${{ vars.VERSION }}.vsix emscript-sdk/emscript-$VERSION_WITH_TIMESTAMP.vsix
+  
       - name: Create package.json for build
         run: |
           VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
