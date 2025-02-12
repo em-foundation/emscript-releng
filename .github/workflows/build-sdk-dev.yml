@@ -50,6 +50,7 @@ jobs:
       - name: Checkout emscript-sdk
         uses: actions/checkout@v4
         with:
+          repository: em-foundation/emscript-sdk
           ref: staging
           path: emscript-sdk
           token: ${{ secrets.token }}
