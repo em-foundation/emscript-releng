@@ -1,4 +1,4 @@
-name: Build emscript-sdk using dev branches
+name: Build emscript-sdk on main branches
 
 on:
   # push:
