@@ -50,7 +50,7 @@ jobs:
       - name: Checkout emscript-sdk
         uses: actions/checkout@v4
         with:
-          ref: dev
+          ref: staging
           path: emscript-sdk
           token: ${{ secrets.token }}
 
@@ -80,7 +80,6 @@ jobs:
       - name: Build VScode extension
         run: |
           VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
-          rm -f emscript-sdk/emscript*.vsix
           pushd emscript-tools
           npm install
           npm version --git-tag-version=false --allow-same-version=true ${{ vars.VERSION }}
@@ -88,6 +87,7 @@ jobs:
           sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/ext/extension.js
           npx vsce package
           popd
+          rm -f emscript-sdk/emscript*.vsix
           cp emscript-tools/emscript-${{ vars.VERSION }}.vsix emscript-sdk/emscript-$VERSION_WITH_TIMESTAMP.vsix
 
       - name: Build emscript cli
@@ -135,6 +135,7 @@ jobs:
           git config --global user.name 'build-sdk.yml workflow'
           git config --global user.email 'hello@openem.org'
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-sdk.git
+          git status
           git add --all
           git status
           git commit -m "build-sdk run"
