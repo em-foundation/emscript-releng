@@ -7,7 +7,9 @@ rm -f emscript*.vsix
 npm version --no-git-tag-version --allow-same-version $VERS
 
 npm run build
+npm run cli-executable
 sed_in_place "s/@VERS/$FULL/" out/cli/Main.js
+sed_in_place "s/@VERS/$FULL/" out/cli/bin/emscript
 sed_in_place "s/@VERS/$FULL/" out/ext/extension.js
 
 npx vsce package
@@ -19,7 +21,8 @@ rm -f *.tgz
 sed_in_place "s/@VERS/$VERS/" package.json
 mkdir -p bin
 cp ../../out/cli/Main.js bin/main.js
-chmod +x bin/main.js
+cp ../../out/cli/bin/emscript bin/
+chmod +x bin/{main.js,emscript}
 npm pack .
 mv *.tgz emscript-cli-$FULL.tgz
 gh release delete-asset resources *.tgz --repo em-foundation/npm-packages -y || true
