@@ -51,8 +51,8 @@ jobs:
       - name: Get current version and date
         id: date
         run: |
-          echo "::set-output name=date::$(date -u +%Y%m%d%H%M)"
-          echo "::set-output name=version::$(cat emscript-releng/VERSION)"
+          echo "date=$(date -u +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
+          echo "version=$(cat emscript-releng/VERSION)" >> $GITHUB_OUTPUT
 
       - name: Create version file, CHANGELOG, etc.
         run: |
