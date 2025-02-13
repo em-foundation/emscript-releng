@@ -61,7 +61,8 @@ jobs:
           cp emscript-releng/etc/packages/emscript-sdk/* emscript-sdk/
           echo "${{ steps.date.outputs.version }}" > emscript-sdk/VERSION-${VERSION_WITH_TIMESTAMP}
           echo "${{ steps.date.outputs.date }}" >> emscript-sdk/VERSION-${VERSION_WITH_TIMESTAMP}
-                    VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
+          sed -i "s/@VERS/${{ steps.date.outputs.version }}/" emscript-sdk/package.json
+          sed -i "s/@FULL/$VERSION_WITH_TIMESTAMP/" emscript-sdk/package.json
 
       - name: Add workspace
         run: |
@@ -115,13 +116,10 @@ jobs:
           rm -f emscript-sdk/emscript*.vsix
           cp emscript-tools/emscript-${{ steps.date.outputs.version }}.vsix emscript-sdk/emscript-$VERSION_WITH_TIMESTAMP.vsix
   
-      - name: Create package.json for build
+      - name: Create package-lock.json
         run: |
           VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
-          cp emscript-releng/etc/packages/emscript-sdk/package.json emscript-sdk/
           pushd emscript-sdk
-          sed -i "s/@VERS/${{ steps.date.outputs.version }}/" package.json
-          sed -i "s/@FULL/$VERSION_WITH_TIMESTAMP/" package.json
           npm install --package-lock-only --ignore-scripts
           popd
 
