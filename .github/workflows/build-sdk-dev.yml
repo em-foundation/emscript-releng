@@ -52,17 +52,22 @@ jobs:
         with:
           node-version: 22
 
-      - name: Create new version file and CHANGELOG
+      - name: Create new package.json, version file, CHANGELOG, etc.
         run: |
           VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
-          rm -f emscript-sdk/VERSION-*
+          rm -rf emscript-sdk/*
+          cp emscript-releng/etc/packages/emscript-sdk/* emscript-sdk/
           echo "${{ vars.VERSION }}" > emscript-sdk/VERSION-${VERSION_WITH_TIMESTAMP}
           echo "${{ steps.date.outputs.date }}" >> emscript-sdk/VERSION-${VERSION_WITH_TIMESTAMP}
-          cp emscript-releng/CHANGELOG.md emscript-sdk/CHANGELOG.md
+                    VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
+          pushd emscript-sdk
+          sed -i "s/@VERS/${{ vars.VERSION }}/" package.json
+          sed -i "s/@FULL/$VERSION_WITH_TIMESTAMP/" package.json
+          npm install --package-lock-only --ignore-scripts
+          popd
 
       - name: Add workspace
         run: |
-          rm -rf emscript-sdk/workspace
           mkdir emscript-sdk/workspace
           cp -r emscript-content/workspace/em.core emscript-sdk/workspace/
           cp -r emscript-content/workspace/ti.cc23xx emscript-sdk/workspace/
@@ -113,16 +118,6 @@ jobs:
           rm -f emscript-sdk/emscript*.vsix
           cp emscript-tools/emscript-${{ vars.VERSION }}.vsix emscript-sdk/emscript-$VERSION_WITH_TIMESTAMP.vsix
   
-      - name: Create package.json for build
-        run: |
-          VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
-          cp emscript-releng/etc/packages/emscript-sdk/package.json emscript-sdk/
-          pushd emscript-sdk
-          sed -i "s/@VERS/${{ vars.VERSION }}/" package.json
-          sed -i "s/@FULL/$VERSION_WITH_TIMESTAMP/" package.json
-          npm install --package-lock-only --ignore-scripts
-          popd
-
       - name: Commit and push changes
         run: |
           pushd emscript-sdk
