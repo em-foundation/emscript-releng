@@ -62,3 +62,11 @@ jobs:
           git push
           popd
 
+      - name: Create release from tag / changelog
+        uses: softprops/action-gh-release@v2
+        with:
+          repository: em-foundation/emscript-sdk
+          token: ${{ secrets.token }}
+          tag_name: ${{ steps.date.outputs.version }}
+          body_path: ${{ github.workspace }}/emscript-sdk/CHANGELOG.md
+          make_latest: true
