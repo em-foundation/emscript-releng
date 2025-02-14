@@ -44,8 +44,12 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-sdk.git
           git merge --squash origin/staging
           git add --all
+          git commit -m "merge-sdk run"
           git status
-          git commit -m "merge-sdk run" 
+          git log
+          git checkout staging
+          git merge main
+          git status
           git log
           # git push
           popd
