@@ -42,7 +42,7 @@ jobs:
           git config --global user.name 'merge sdk.yml workflow'
           git config --global user.email 'hello@openem.org'
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-sdk.git
-          git merge --squash -m "merge-sdk run" staging
+          git merge --squash -m "merge-sdk run" origin/staging
           git status
           git log
           # git push
