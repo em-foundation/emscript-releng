@@ -21,6 +21,7 @@ jobs:
         with:
           repository: em-foundation/emscript-sdk
           ref: main
+          fetch-depth: 0
           path: emscript-sdk
           token: ${{ secrets.token }}
 
