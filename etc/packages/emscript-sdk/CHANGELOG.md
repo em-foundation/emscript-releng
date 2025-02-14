@@ -4,8 +4,9 @@
 * build using github actions
 * build emscript (minified main.js)
 * new `emscript load` sub-command
-* new VS Code `Build and Load Program` context menu item
-* new VS Code `Build Meta Program only` context menu item 
+* new VS Code `Build and Load` context menu item
+* new VS Code `Build Meta-Program` context menu item
+* support of `em$onexit()` callbacks when halting
 
 ## VERSION-26.0.1
 
