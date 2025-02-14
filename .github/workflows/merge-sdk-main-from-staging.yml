@@ -44,13 +44,14 @@ jobs:
           git merge --squash origin/staging
           git add --all
           git commit -m "merge-sdk run"
-          # git push
+          git push
+          popd
 
       - name: Tag repo main with shortened tag
         run: |
           pushd emscript-sdk
           git tag ${{ steps.date.outputs.version }}
-          # git push --tags
+          git push --tags
           popd
 
       - name: Merge main back into staging
@@ -60,6 +61,6 @@ jobs:
           git merge main
           git status
           git log
-          # git push
+          git push
           popd
 
