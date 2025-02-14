@@ -1,0 +1,62 @@
+name: Merge emscript-sdk staging branch into main
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout emscript-releng
+        uses: actions/checkout@v4
+        with:
+          repository: em-foundation/emscript-releng
+          ref: main
+          path: emscript-releng
+          token: ${{ secrets.token }}
+
+      - name: Checkout emscript-sdk
+        uses: actions/checkout@v4
+        with:
+          repository: em-foundation/emscript-sdk
+          ref: main
+          path: emscript-sdk
+          token: ${{ secrets.token }}
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Get current version and date
+        id: date
+        run: |
+          echo "date=$(date -u +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
+          echo "version=$(cat emscript-releng/VERSION)" >> $GITHUB_OUTPUT
+
+      - name: Commit and push changes
+        run: |
+          pushd emscript-sdk
+          git config --global user.name 'merge sdk.yml workflow'
+          git config --global user.email 'hello@openem.org'
+          git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-sdk.git
+          git merge --squash -m "merge-sdk run" staging
+          git status
+          git log
+          # git push
+          popd
+
+      # - name: Tag repos
+      #   run: |
+      #     VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
+      #     for repo in releng tools content sdk
+      #     do
+      #       pushd emscript-$repo
+      #       git config --global user.name 'build-sdk.yml workflow'
+      #       git config --global user.email 'hello@openem.org'
+      #       git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-$repo.git
+      #       git tag $VERSION_WITH_TIMESTAMP
+      #       git push --tags
+      #       popd
+      #     done
