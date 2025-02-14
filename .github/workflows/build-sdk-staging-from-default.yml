@@ -119,6 +119,7 @@ jobs:
 
       - name: Commit and push changes
         run: |
+          VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
           pushd emscript-sdk
           git config --global user.name 'build-sdk.yml workflow'
           git config --global user.email 'hello@openem.org'
@@ -126,7 +127,7 @@ jobs:
           git status
           git add --all
           git status
-          git commit -m "build-sdk run"
+          git commit -m "build-sdk run: $VERSION_WITH_TIMESTAMP"
           git push
           popd
 
