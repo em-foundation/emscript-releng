@@ -7,6 +7,7 @@
 * new VS Code `Build and Load` context menu item
 * new VS Code `Build Meta-Program` context menu item
 * support of `em$onexit()` callbacks when halting
+* fixes bug in alarm_mgr
 
 ## VERSION-26.0.1
 
