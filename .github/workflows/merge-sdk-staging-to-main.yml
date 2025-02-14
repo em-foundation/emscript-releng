@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  merge:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,8 +42,10 @@ jobs:
           git config --global user.name 'merge sdk.yml workflow'
           git config --global user.email 'hello@openem.org'
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-sdk.git
-          git merge --squash -m "merge-sdk run" origin/staging
+          git merge --squash origin/staging
+          git add --all
           git status
+          git commit -m "merge-sdk run" 
           git log
           # git push
           popd
