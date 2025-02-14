@@ -52,7 +52,6 @@ jobs:
           git tag ${{ steps.date.outputs.version }}
           # git push --tags
           popd
-          done
 
       - name: Merge main back into staging
         run: |
