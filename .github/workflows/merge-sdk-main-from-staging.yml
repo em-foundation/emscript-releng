@@ -12,7 +12,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: em-foundation/emscript-releng
-          ref: dev
           path: emscript-releng
           token: ${{ secrets.token }}
 
