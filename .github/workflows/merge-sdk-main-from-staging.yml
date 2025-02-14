@@ -1,4 +1,4 @@
-name: Merge emscript-sdk staging branch into main
+name: Merge emscript-sdk main from staging
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: em-foundation/emscript-releng
-          ref: main
+          ref: dev
           path: emscript-releng
           token: ${{ secrets.token }}
 
@@ -36,7 +36,7 @@ jobs:
           echo "date=$(date -u +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
           echo "version=$(cat emscript-releng/VERSION)" >> $GITHUB_OUTPUT
 
-      - name: Commit and push changes
+      - name: Squash-merge staging into main
         run: |
           pushd emscript-sdk
           git config --global user.name 'merge sdk.yml workflow'
@@ -45,8 +45,19 @@ jobs:
           git merge --squash origin/staging
           git add --all
           git commit -m "merge-sdk run"
-          git status
-          git log
+          # git push
+
+      - name: Tag repo main with shortened tag
+        run: |
+          pushd emscript-sdk
+          git tag ${{ steps.date.outputs.version }}
+          # git push --tags
+          popd
+          done
+
+      - name: Merge main back into staging
+        run: |
+          pushd emscript-sdk
           git checkout staging
           git merge main
           git status
@@ -54,16 +65,3 @@ jobs:
           # git push
           popd
 
-      # - name: Tag repos
-      #   run: |
-      #     VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
-      #     for repo in releng tools content sdk
-      #     do
-      #       pushd emscript-$repo
-      #       git config --global user.name 'build-sdk.yml workflow'
-      #       git config --global user.email 'hello@openem.org'
-      #       git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-$repo.git
-      #       git tag $VERSION_WITH_TIMESTAMP
-      #       git push --tags
-      #       popd
-      #     done
