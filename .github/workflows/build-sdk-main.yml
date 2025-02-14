@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: em-foundation/emscript-sdk
-          ref: main
+          ref: staging
           path: emscript-sdk
           token: ${{ secrets.token }}
 
@@ -142,7 +142,7 @@ jobs:
             git config --global user.name 'build-sdk.yml workflow'
             git config --global user.email 'hello@openem.org'
             git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-$repo.git
-            git tag ${{ steps.date.outputs.version }}
+            git tag $VERSION_WITH_TIMESTAMP
             git push --tags
             popd
           done
