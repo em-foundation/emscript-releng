@@ -1,9 +1,6 @@
 name: Build emscript-sdk using dev branches
 
 on:
-  # push:
-  #   branches:
-  #     - main
   workflow_dispatch:
 
 jobs:
@@ -11,10 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date -u +%Y%m%d%H%M)"
-
       - name: Checkout emscript-releng
         uses: actions/checkout@v4
         with:
@@ -39,18 +32,11 @@ jobs:
           path: emscript-content
           token: ${{ secrets.token }}
 
-      # - name: Checkout emscript-docs
-      #   uses: actions/checkout@v4
-      #   with:
-      #     repository: em-foundation/emscript-docs
-      #     ref: dev
-      #     path: emscript-docs
-      #     token: ${{ secrets.token }}
-
       - name: Checkout emscript-sdk
         uses: actions/checkout@v4
         with:
-          ref: dev
+          repository: em-foundation/emscript-sdk
+          ref: staging
           path: emscript-sdk
           token: ${{ secrets.token }}
 
@@ -59,17 +45,24 @@ jobs:
         with:
           node-version: 22
 
-      - name: Create new version file and CHANGELOG
+      - name: Get current version and date
+        id: date
         run: |
-          VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
-          rm -f emscript-sdk/VERSION-*
-          echo "${{ vars.VERSION }}" > emscript-sdk/VERSION-${VERSION_WITH_TIMESTAMP}
+          echo "date=$(date -u +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
+          echo "version=$(cat emscript-releng/VERSION)" >> $GITHUB_OUTPUT
+
+      - name: Create version file, CHANGELOG, etc.
+        run: |
+          VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
+          rm -rf emscript-sdk/*
+          cp emscript-releng/etc/packages/emscript-sdk/* emscript-sdk/
+          echo "${{ steps.date.outputs.version }}" > emscript-sdk/VERSION-${VERSION_WITH_TIMESTAMP}
           echo "${{ steps.date.outputs.date }}" >> emscript-sdk/VERSION-${VERSION_WITH_TIMESTAMP}
-          cp emscript-releng/CHANGELOG.md emscript-sdk/CHANGELOG.md
+          sed -i "s/@VERS/${{ steps.date.outputs.version }}/" emscript-sdk/package.json
+          sed -i "s/@FULL/$VERSION_WITH_TIMESTAMP/" emscript-sdk/package.json
 
       - name: Add workspace
         run: |
-          rm -rf emscript-sdk/workspace
           mkdir emscript-sdk/workspace
           cp -r emscript-content/workspace/em.core emscript-sdk/workspace/
           cp -r emscript-content/workspace/ti.cc23xx emscript-sdk/workspace/
@@ -77,23 +70,11 @@ jobs:
           cp emscript-content/.clang-format emscript-sdk/
           cp emscript-content/tsconfig.base.json emscript-sdk/
 
-      - name: Build VScode extension
-        run: |
-          VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
-          rm -f emscript-sdk/emscript*.vsix
-          pushd emscript-tools
-          npm install
-          npm version --git-tag-version=false --allow-same-version=true ${{ vars.VERSION }}
-          npm run build-ext
-          sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/ext/extension.js
-          npx vsce package
-          popd
-          cp emscript-tools/emscript-${{ vars.VERSION }}.vsix emscript-sdk/emscript-$VERSION_WITH_TIMESTAMP.vsix
-
       - name: Build emscript cli
         run: |
-          VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
+          VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
           pushd emscript-tools
+          npm install
           npm run build-cli
           npm run cli-executable
           sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/cli/Main.js
@@ -101,13 +82,13 @@ jobs:
           mkdir build
           cp -r $GITHUB_WORKSPACE/emscript-releng/etc/packages/emscript-cli build/
           pushd build/emscript-cli
-          sed -i "s/@VERS/${{ vars.VERSION }}/" package.json
+          sed -i "s/@VERS/${{ steps.date.outputs.version }}/" package.json
           mkdir -p bin
           cp $GITHUB_WORKSPACE/emscript-tools/out/cli/Main.js bin/main.js
           cp $GITHUB_WORKSPACE/emscript-tools/out/cli/bin/emscript bin/
           chmod +x bin/*
           npm pack .
-          mv emscript-cli-${{ vars.VERSION }}.tgz emscript-cli-$VERSION_WITH_TIMESTAMP.tgz
+          mv emscript-cli-${{ steps.date.outputs.version }}.tgz emscript-cli-$VERSION_WITH_TIMESTAMP.tgz
           popd
           popd
 
@@ -118,14 +99,24 @@ jobs:
           repository: em-foundation/npm-packages
           token: ${{ secrets.token }}
           tag_name: resources
-
-      - name: Create package.json for build
+  
+      - name: Build VScode extension
         run: |
-          VERSION_WITH_TIMESTAMP=${{ vars.VERSION }}.${{ steps.date.outputs.date }}
-          cp emscript-releng/etc/packages/emscript-sdk/package.json emscript-sdk/
+          VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
+          pushd emscript-tools
+          npm install
+          npm version --git-tag-version=false --allow-same-version=true ${{ steps.date.outputs.version }}
+          npm run build-ext
+          sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/ext/extension.js
+          npx vsce package
+          popd
+          rm -f emscript-sdk/emscript*.vsix
+          cp emscript-tools/emscript-${{ steps.date.outputs.version }}.vsix emscript-sdk/emscript-$VERSION_WITH_TIMESTAMP.vsix
+  
+      - name: Create package-lock.json
+        run: |
+          VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
           pushd emscript-sdk
-          sed -i "s/@VERS/${{ vars.VERSION }}/" package.json
-          sed -i "s/@FULL/$VERSION_WITH_TIMESTAMP/" package.json
           npm install --package-lock-only --ignore-scripts
           popd
 
@@ -134,9 +125,24 @@ jobs:
           pushd emscript-sdk
           git config --global user.name 'build-sdk.yml workflow'
           git config --global user.email 'hello@openem.org'
-          git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/$GITHUB_REPOSITORY
+          git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-sdk.git
+          git status
           git add --all
           git status
           git commit -m "build-sdk run"
           git push
           popd
+
+      - name: Tag repos
+        run: |
+          VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
+          for repo in releng tools content sdk
+          do
+            pushd emscript-$repo
+            git config --global user.name 'build-sdk.yml workflow'
+            git config --global user.email 'hello@openem.org'
+            git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/em-foundation/emscript-$repo.git
+            git tag $VERSION_WITH_TIMESTAMP
+            git push --tags
+            popd
+          done
