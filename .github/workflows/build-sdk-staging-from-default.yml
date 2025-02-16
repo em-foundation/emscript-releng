@@ -89,7 +89,7 @@ jobs:
           popd
           popd
 
-      - name: Upload Asset to npm-packages resources
+      - name: Upload emscript-cli package to npm-packages/resources
         uses: softprops/action-gh-release@v1
         with:
           files: emscript-tools/build/emscript-cli/emscript-cli-*.tgz
@@ -116,6 +116,22 @@ jobs:
           pushd emscript-sdk
           npm install --package-lock-only --ignore-scripts
           popd
+
+      - name: Pack emscript-sdk npm package
+        run: |
+          VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
+          pushd emscript-sdk
+          npm pack --pack-destination=.. .
+          popd
+          mv emscript-sdk-${{ steps.date.outputs.version }}.tgz emscript-sdk-$VERSION_WITH_TIMESTAMP.tgz
+
+      - name: Upload emscript-sdk package to npm-packages/resources
+        uses: softprops/action-gh-release@v1
+        with:
+          files: emscript-sdk-$VERSION_WITH_TIMESTAMP.tgz
+          repository: em-foundation/npm-packages
+          token: ${{ secrets.token }}
+          tag_name: resources
 
       - name: Commit and push changes
         run: |
