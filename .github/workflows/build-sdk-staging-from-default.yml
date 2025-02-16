@@ -122,12 +122,12 @@ jobs:
           pushd emscript-sdk
           npm pack --pack-destination=.. .
           popd
-          mv emscript-sdk-${{ steps.date.outputs.version }}.tgz emscript-sdk-$VERSION_WITH_TIMESTAMP.tgz
+          mv -v emscript-sdk-${{ steps.date.outputs.version }}.tgz emscript-sdk-$VERSION_WITH_TIMESTAMP.tgz
 
       - name: Upload emscript-sdk package to npm-packages/resources
         uses: softprops/action-gh-release@v1
         with:
-          files: emscript-sdk-$VERSION_WITH_TIMESTAMP.tgz
+          files: emscript-sdk-*.tgz
           repository: em-foundation/npm-packages
           token: ${{ secrets.token }}
           tag_name: resources
