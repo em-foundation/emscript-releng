@@ -1,5 +1,5 @@
 {
-    "name": "emscript-sdk",
+    "name": "@em-foundation/emscript-sdk",
     "version": "@VERS",
     "description": "Em-Foundation's EM&bull;Script software development kit.  See https://openem.org for details",
     "license": "MIT",
