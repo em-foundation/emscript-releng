@@ -116,6 +116,12 @@ jobs:
           npm install --package-lock-only --ignore-scripts
           popd
 
+      - name: Do dry-run publish to see if there are any issues
+        run: |
+          pushd emscript-sdk
+          npm publish --access public --dry-run
+          popd
+
       - name: Pack emscript-sdk npm package
         run: |
           VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
