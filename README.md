@@ -18,12 +18,10 @@ This starts the build.  At the end, the build will tag all the associated reposi
 
 ## Monitor build progress
 
-- Refresh the screen or click on `Build emscript-sdk using dev branches` in left menu
+After a few seconds, the running build should appear in the browser window.
 
-This should show the running build.
-
-- Click on the build to see the jobs running
-- Click on the job to see the log details for that job
+- Click on the build status line to see the jobs running
+- Click on the build job to see the log details for that job
 
 ## Merge emscript-sdk staging into main
 

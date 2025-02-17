@@ -1,6 +1,22 @@
 {
     "name": "emscript-sdk",
     "version": "@VERS",
+    "description": "Em-Foundation's EM&bull;Script software development kit.  See https://openem.org for details",
+    "license": "MIT",
+    "author": {
+        "name": "Bob Frankel",
+        "email": "bob@em-foundation.org",
+        "url": "https://openem.org"
+    },
+    "contributors": [
+        {
+            "name": "Geof Cohler",
+            "url": "https://openem.org"
+        }
+    ],
+    "keywords": ["openem", "em-foundation", "emscript", "em", "emfoundation", "embedded"],
+    "homepage": "https://www.openem.org",
+    "repository": "github:em-foundation/emscript-sdk",
     "bin": {
         "emscript": "./bin/main.js"
     },
@@ -10,7 +26,9 @@
         "ti-uniflash": "https://github.com/em-foundation/npm-packages/releases/download/resources/ti-uniflash-8.7.0.tgz"
     },
     "scripts": {
-        "postinstall": "if pwd | grep -q 'node_modules/emscript-sdk$'; then cp -r ./* ../../ && cd ../../; fi && npx emscript-cli --root=. config",
+        "copy-up": "if pwd | grep -q '/node_modules/emscript-sdk$'; then cp -r ./* ../../ && cd ../../; fi",
+        "configure": "npx emscript-cli --root=. config",
+        "postinstall": "npm run copy-up && npm run configure",
         "verify-build": "cd workspace; npx emscript-cli build --unit em.core/em.examples.basic/Ex02_BlinkerP.em.ts",
         "verify-load": "cd workspace; npx emscript-cli build --unit em.core/em.examples.basic/Ex02_BlinkerP.em.ts --load"
     }
