@@ -5,12 +5,13 @@
     "license": "MIT",
     "author": {
         "name": "Bob Frankel",
-        "email": "bob@em-foundation.org",
+        "email": "hello@openem.org",
         "url": "https://openem.org"
     },
     "contributors": [
         {
             "name": "Geof Cohler",
+            "email": "geof@openem.org",
             "url": "https://openem.org"
         }
     ],
