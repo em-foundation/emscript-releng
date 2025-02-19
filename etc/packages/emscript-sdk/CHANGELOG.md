@@ -2,7 +2,7 @@
 
 ## VERSION-26.2.0
 * in development
-* `for of` iterator support for `$factory` objects;&thinsp; see `em.utils/AlarmMgr`
+* fixed `for of` iterator support for `$factory` objects;&thinsp; see `em.utils/AlarmMgr`
 
 ## VERSION-26.1.1
 * inagural public release
