@@ -1,7 +1,7 @@
 # EM&bull;Script SDK v26
 
-## VERSION-26.2.0
-* in development
+## VERSION-26.1.2
+* Minor doc improvements
 * fixed `for of` iterator support for `$factory` objects;&thinsp; see `em.utils/AlarmMgr`
 
 ## VERSION-26.1.1
