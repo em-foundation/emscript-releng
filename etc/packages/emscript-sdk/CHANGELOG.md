@@ -2,6 +2,7 @@
 
 ## VERSION-26.1.3
 * optional `inherits` parameter for `em.$declare`
+* use of `$range` in `for of` loops
 
 ## VERSION-26.1.2
 * minor doc improvements
