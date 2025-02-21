@@ -1,7 +1,10 @@
 # EM&bull;Script SDK v26
 
+## VERSION-26.1.3
+* optional `inherits` parameter for `em.$declare`
+
 ## VERSION-26.1.2
-* Minor doc improvements
+* minor doc improvements
 * formatting changes on combo example
 * fixed `for of` iterator support for `$factory` objects;&thinsp; see `em.utils/AlarmMgr`
 
