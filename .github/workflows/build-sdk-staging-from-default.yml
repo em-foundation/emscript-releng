@@ -57,7 +57,13 @@ jobs:
           sed -i "s/@VERS/${{ steps.date.outputs.version }}/" emscript-sdk/package.json
           sed -i "s/@FULL/$VERSION_WITH_TIMESTAMP/" emscript-sdk/package.json
 
-      - name: Add workspace
+      - name: Verify workspace
+        run: |
+          pushd emscript-content
+          npm run lint
+          popd
+
+      - name: Add workspace to sdk
         run: |
           mkdir emscript-sdk/workspace
           cp -r emscript-content/workspace/em.core emscript-sdk/workspace/
