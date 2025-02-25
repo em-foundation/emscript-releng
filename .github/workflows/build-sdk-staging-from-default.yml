@@ -60,6 +60,7 @@ jobs:
       - name: Verify workspace
         run: |
           pushd emscript-content
+          npm install
           npm run lint
           popd
 
