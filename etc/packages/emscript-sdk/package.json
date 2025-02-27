@@ -34,8 +34,8 @@
         "ti-uniflash": "https://github.com/em-foundation/npm-packages/releases/download/resources/ti-uniflash-8.7.0.tgz"
     },
     "scripts": {
-        "postinstall": "if pwd | grep -q '/node_modules/@em-foundation/emscript-sdk$'; then cp -r ./* ../../../ && cd ../../../; fi && ./node_modules/emscript-cli/bin/emscript --root=. config",
-        "verify-build": "cd workspace; ../node_modules/emscript-cli/bin/emscript build --unit em.core/em.examples.basic/Ex02_BlinkerP.em.ts",
-        "verify-load": "cd workspace; ../node_modules/emscript-cli/bin/emscript build --unit em.core/em.examples.basic/Ex02_BlinkerP.em.ts --load"
+        "postinstall": "if pwd | grep -q '/node_modules/@em-foundation/emscript-sdk$'; then cp -r ./* ../../../ && cd ../../../; fi && ./node_modules/emscript-cli/bin/main.js --root=. config",
+        "verify-build": "cd workspace; ../node_modules/emscript-cli/bin/main.js build --unit em.core/em.examples.basic/Ex02_BlinkerP.em.ts",
+        "verify-load": "cd workspace; ../node_modules/emscript-cli/bin/main.js build --unit em.core/em.examples.basic/Ex02_BlinkerP.em.ts --load"
     }
 }
