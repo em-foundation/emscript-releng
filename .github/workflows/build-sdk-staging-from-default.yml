@@ -67,8 +67,7 @@ jobs:
       - name: Add workspace to sdk
         run: |
           mkdir emscript-sdk/workspace
-          cp -r emscript-content/workspace/em.core emscript-sdk/workspace/
-          cp -r emscript-content/workspace/ti.cc23xx emscript-sdk/workspace/
+          cp -r emscript-content/workspace/{em,ti,adi}.* emscript-sdk/workspace/
           cp emscript-content/workspace/emscript.ini emscript-sdk/workspace/
           cp emscript-content/.clang-format emscript-sdk/
           cp emscript-content/tsconfig.base.json emscript-sdk/
