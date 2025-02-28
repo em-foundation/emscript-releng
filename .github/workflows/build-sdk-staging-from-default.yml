@@ -61,7 +61,9 @@ jobs:
         run: |
           pushd emscript-content
           npm install
+          ln -s tsconfig.base.json tsconfig.json
           npm run lint
+          unlink tsconfig.json
           popd
 
       - name: Add workspace to sdk
