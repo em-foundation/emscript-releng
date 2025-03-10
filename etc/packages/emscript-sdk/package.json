@@ -34,6 +34,7 @@
         "ti-uniflash": "https://github.com/em-foundation/npm-packages/releases/download/resources/ti-uniflash-8.7.0.tgz"
     },
     "scripts": {
+        "clean": "cd workspace; ../node_modules/emscript-cli/bin/main.js clean",
         "postinstall": "if pwd | grep -q '/node_modules/@em-foundation/emscript-sdk$'; then cp -r ./* ../../../ && cd ../../../; fi && ./node_modules/emscript-cli/bin/main.js --root=. config",
         "verify-build": "npm run verify-build-ti",
         "verify-load": "npm run verify-load-ti",
