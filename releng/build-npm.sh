@@ -17,8 +17,8 @@ make_package() {
     touch $root/dist/VERSION-$vers.$DATE
     pushd $root
     npm pack
-    gh release delete-asset resources *.tgz --repo em-foundation/npm-packages -y || true
-    gh release upload resources *.tgz --repo em-foundation/npm-packages
+    gh release delete-asset resources ${name}*.tgz --repo em-foundation/npm-packages -y || true
+    gh release upload resources ${name}*.tgz --repo em-foundation/npm-packages
     popd
 }
 
