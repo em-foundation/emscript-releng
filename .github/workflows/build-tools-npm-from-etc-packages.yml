@@ -1,0 +1,97 @@
+name: Build emscript-sdk staging from dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout emscript-releng
+        uses: actions/checkout@v4
+        with:
+          path: emscript-releng
+          token: ${{ secrets.token }}
+
+      - name: Build segger-arm package
+        run: |
+          pushd emscript-releng
+          name=segger-arm
+          PKGS=etc/packages
+          NPM=build/npm
+          DATE=$(date -u +%Y%m%d%H%M)
+          vers=$(cat $PKGS/$name/VERSION)
+          root=$NPM/$name
+          mkdir -p $root
+          cp -r $PKGS/template/* ${root}
+          sed_in_place "s/@NAME/$name/" "$root/scripts/install.js"
+          sed_in_place "s/@NAME/$name/" "$root/package.json"
+          sed_in_place "s/@VERS/${vers}/" "${root}/package.json"
+          mkdir -p $root/dist
+          cp $PKGS/$name/*.zip $root/dist
+          cp $PKGS/$name/LICENSE $root/dist
+          touch $root/dist/VERSION-$vers.$DATE
+          pushd $root
+          npm pack .
+          mv $name*.tgz ../
+          popd
+          popd
+
+      - name: Build segger-jlink package
+        run: |
+          pushd emscript-releng
+          name=segger-jlink
+          PKGS=etc/packages
+          NPM=build/npm
+          DATE=$(date -u +%Y%m%d%H%M)
+          vers=$(cat $PKGS/$name/VERSION)
+          root=$NPM/$name
+          mkdir -p $root
+          cp -r $PKGS/template/* ${root}
+          sed_in_place "s/@NAME/$name/" "$root/scripts/install.js"
+          sed_in_place "s/@NAME/$name/" "$root/package.json"
+          sed_in_place "s/@VERS/${vers}/" "${root}/package.json"
+          mkdir -p $root/dist
+          cp $PKGS/$name/*.zip $root/dist
+          cp $PKGS/$name/LICENSE $root/dist
+          touch $root/dist/VERSION-$vers.$DATE
+          pushd $root
+          npm pack .
+          mv $name*.tgz ../
+          popd
+          popd
+
+      - name: Build ti-uniflash package
+        run: |
+          pushd emscript-releng
+          name=ti-uniflash
+          PKGS=etc/packages
+          NPM=build/npm
+          DATE=$(date -u +%Y%m%d%H%M)
+          vers=$(cat $PKGS/$name/VERSION)
+          root=$NPM/$name
+          mkdir -p $root
+          cp -r $PKGS/template/* ${root}
+          sed_in_place "s/@NAME/$name/" "$root/scripts/install.js"
+          sed_in_place "s/@NAME/$name/" "$root/package.json"
+          sed_in_place "s/@VERS/${vers}/" "${root}/package.json"
+          mkdir -p $root/dist
+          cp $PKGS/$name/*.zip $root/dist
+          cp $PKGS/$name/LICENSE $root/dist
+          touch $root/dist/VERSION-$vers.$DATE
+          pushd $root
+          npm pack .
+          mv $name*.tgz ../
+          ls -l ../
+          popd
+          popd
+
+      # - name: Upload emscript-cli package to npm-packages/resources
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: emscript-tools/build/emscript-cli/emscript-cli-*.tgz
+      #     repository: em-foundation/npm-packages
+      #     token: ${{ secrets.token }}
+      #     tag_name: resources
+  
