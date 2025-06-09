@@ -25,7 +25,6 @@ make_package() {
 rm -rf $NPM
 mkdir $NPM
 
-make_package openocd
 make_package segger-arm
 make_package segger-jlink
 make_package ti-uniflash
