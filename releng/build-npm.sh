@@ -1,6 +1,7 @@
 #! /bin/bash
 
 source releng/common.sh
+DATE=`date -u +%Y%m%d%H%M`
 
 make_package() {
     name=$1
