@@ -1,6 +1,7 @@
-#! /bin/sh
+#! /bin/bash
 
 source releng/common.sh
+DATE=`date -u +%Y%m%d%H%M`
 
 make_package() {
     name=$1
@@ -17,8 +18,8 @@ make_package() {
     touch $root/dist/VERSION-$vers.$DATE
     pushd $root
     npm pack
-    gh release delete-asset resources *.tgz --repo em-foundation/npm-packages -y || true
-    gh release upload resources *.tgz --repo em-foundation/npm-packages
+    gh release delete-asset resources ${name}*.tgz --repo em-foundation/npm-packages -y || true
+    gh release upload resources ${name}*.tgz --repo em-foundation/npm-packages
     popd
 }
 
@@ -26,5 +27,5 @@ rm -rf $NPM
 mkdir $NPM
 
 make_package segger-arm
+make_package segger-jlink
 make_package ti-uniflash
-

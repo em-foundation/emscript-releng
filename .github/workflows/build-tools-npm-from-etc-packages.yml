@@ -14,84 +14,38 @@ jobs:
           path: emscript-releng
           token: ${{ secrets.token }}
 
-      - name: Build segger-arm package
+      - name: Get parameters
+        id: params
         run: |
-          pushd emscript-releng
-          name=segger-arm
-          PKGS=etc/packages
-          NPM=build/npm
-          DATE=$(date -u +%Y%m%d%H%M)
-          vers=$(cat $PKGS/$name/VERSION)
-          root=$NPM/$name
-          mkdir -p $root
-          cp -r $PKGS/template/* ${root}
-          sed_in_place "s/@NAME/$name/" "$root/scripts/install.js"
-          sed_in_place "s/@NAME/$name/" "$root/package.json"
-          sed_in_place "s/@VERS/${vers}/" "${root}/package.json"
-          mkdir -p $root/dist
-          cp $PKGS/$name/*.zip $root/dist
-          cp $PKGS/$name/LICENSE $root/dist
-          touch $root/dist/VERSION-$vers.$DATE
-          pushd $root
-          npm pack .
-          mv $name*.tgz ../
-          popd
-          popd
+          echo "PKGS=$GITHUB_WORKSPACE/emscript-releng/etc/packages" >> $GITHUB_OUTPUT
+          echo "NPM=$GITHUB_WORKSPACE/emscript-releng/build/npm" >> $GITHUB_OUTPUT
+          echo "DATE=$(date -u +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
 
-      - name: Build segger-jlink package
+      - name: Build tools npm packages
         run: |
-          pushd emscript-releng
-          name=segger-jlink
-          PKGS=etc/packages
-          NPM=build/npm
-          DATE=$(date -u +%Y%m%d%H%M)
-          vers=$(cat $PKGS/$name/VERSION)
-          root=$NPM/$name
-          mkdir -p $root
-          cp -r $PKGS/template/* ${root}
-          sed_in_place "s/@NAME/$name/" "$root/scripts/install.js"
-          sed_in_place "s/@NAME/$name/" "$root/package.json"
-          sed_in_place "s/@VERS/${vers}/" "${root}/package.json"
-          mkdir -p $root/dist
-          cp $PKGS/$name/*.zip $root/dist
-          cp $PKGS/$name/LICENSE $root/dist
-          touch $root/dist/VERSION-$vers.$DATE
-          pushd $root
-          npm pack .
-          mv $name*.tgz ../
-          popd
-          popd
+          for name in segger-arm segger-jlink ti-uniflash
+          do
+            vers=$(cat ${{ steps.params.outputs.PKGS }}/$name/VERSION)
+            root=${{ steps.params.outputs.NPM }}/$name
+            mkdir -p $root
+            cp -r ${{ steps.params.outputs.PKGS }}/template/* ${root}
+            sed -i "s/@NAME/$name/" $root/scripts/install.js
+            sed -i "s/@NAME/$name/" $root/package.json
+            sed -i "s/@VERS/${vers}/" $root/package.json
+            mkdir -p $root/dist
+            cp ${{ steps.params.outputs.PKGS }}/$name/*.zip $root/dist
+            cp ${{ steps.params.outputs.PKGS }}/$name/LICENSE $root/dist
+            touch $root/dist/VERSION-$vers.${{ steps.params.outputs.DATE }}
+            pushd $root
+            npm pack .
+            mv $name*.tgz ../
+            popd
+          done
 
-      - name: Build ti-uniflash package
-        run: |
-          pushd emscript-releng
-          name=ti-uniflash
-          PKGS=etc/packages
-          NPM=build/npm
-          DATE=$(date -u +%Y%m%d%H%M)
-          vers=$(cat $PKGS/$name/VERSION)
-          root=$NPM/$name
-          mkdir -p $root
-          cp -r $PKGS/template/* ${root}
-          sed_in_place "s/@NAME/$name/" "$root/scripts/install.js"
-          sed_in_place "s/@NAME/$name/" "$root/package.json"
-          sed_in_place "s/@VERS/${vers}/" "${root}/package.json"
-          mkdir -p $root/dist
-          cp $PKGS/$name/*.zip $root/dist
-          cp $PKGS/$name/LICENSE $root/dist
-          touch $root/dist/VERSION-$vers.$DATE
-          pushd $root
-          npm pack .
-          mv $name*.tgz ../
-          ls -l ../
-          popd
-          popd
-
-      # - name: Upload emscript-cli package to npm-packages/resources
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     files: emscript-tools/build/emscript-cli/emscript-cli-*.tgz
-      #     repository: em-foundation/npm-packages
-      #     token: ${{ secrets.token }}
-      #     tag_name: resources
-  
+      - name: Upload tools packages to npm-packages/resources
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ steps.params.outputs.NPM }}/*.tgz
+          repository: em-foundation/npm-packages
+          token: ${{ secrets.token }}
+          tag_name: resources
