@@ -165,3 +165,22 @@ jobs:
             git push --tags
             popd
           done
+
+      - name: Install and test new release
+        run: |
+          VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
+          URL=https://github.com/em-foundation/npm-packages/releases/download/resources/em-foundation-emscript-sdk-$VERSION_WITH_TIMESTAMP.tgz
+          mkdir testing
+          cd testing
+          pwd
+          npm init -y
+          npm install $URL
+          for setup in "adi.max326xx://default" "nordic.nrf5x://52-default" "nordic.nrf5x://54-default" "ti.cc23xx://default"
+          do
+            for unit in em.etc/em.examples.basic/Ex00_EmptyP.em.ts em.etc/em.examples.basic/Ex02_BlinkerP.em.ts
+            do
+              pushd workspace
+              $(npm prefix)/node_modules/emscript-cli/bin/main.js build --unit $unit -S $setup
+              popd
+            done
+          done 
