@@ -16,5 +16,5 @@ jobs:
 
           # List release assets using the release ID
           ASSET_NAMES=$(curl -s -H "Authorization: token ${{ secrets.token }}" \
-            "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/${RELEASE_ID}/assets" | jq 'map(.name)')
+            "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/${RELEASE_ID}/assets" | jq '.[].name' | sort -r)
           echo "ASSET_NAMES=$ASSET_NAMES"
