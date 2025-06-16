@@ -15,16 +15,14 @@ jobs:
           token: ${{ secrets.token }}
 
       - name: Get Release Assets
-        env:
-          GITHUB_TOKEN: ${{ secrets.token }}
         run: |
-          echo "token=$GITHUB_TOKEN"
+          echo "token=${{ secrets.token }}"
           echo "url=${{ github.api_url }}"
           echo "tag_name=${{ github.event.release.tag_name }}"
 
           # Get the release information by tag
-          RELEASE_INFO=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/tags/${{ github.event.release.tag_name }}")
+          RELEASE_INFO=$(curl -s -H "Authorization: token ${{ secrets.token }}" \
+            "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/tags/resources")
           echo "RELEASE_INFO=$RELEASE_INFO"
 
           # Extract release ID from the release info
@@ -32,5 +30,5 @@ jobs:
           echo "RELEASE_ID=$RELEASE_ID"
 
           # List release assets using the release ID
-          curl -s -H "Authorization: token $GITHUB_TOKEN" \
+          curl -s -H "Authorization: token ${{ secrets.token }}" \
             "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/${RELEASE_ID}/assets" | jq '.'
