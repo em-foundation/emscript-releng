@@ -14,7 +14,7 @@ jobs:
             "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/tags/resources")
           RELEASE_ID=$(echo "$RELEASE_INFO" | jq '.id')
           LATEST_ASSET=$(curl -s -H "Authorization: token ${{ secrets.token }}" \
-            "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/${RELEASE_ID}/assets" | jq '. [-1].browser_download_url')
+            "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/${RELEASE_ID}/assets" | jq -r '. [-1].browser_download_url')
           echo "LATEST_ASSET=$LATEST_ASSET"
           mkdir emscript-sdk
           cd emscript-sdk
