@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get latest staging build release
+      - name: Install staging build release
         run: |
           RELEASE_INFO=$(curl -s -H "Authorization: token ${{ secrets.token }}" \
             "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/tags/resources")
@@ -16,15 +16,9 @@ jobs:
           LATEST_ASSET=$(curl -s -H "Authorization: token ${{ secrets.token }}" \
             "${{ github.api_url }}/repos/em-foundation/npm-packages/releases/${RELEASE_ID}/assets" | jq '. [-1].browser_download_url')
           echo "LATEST_ASSET=$LATEST_ASSET"
-
-      - name: Install latest release
-        run: |
           mkdir emscript-sdk
           cd emscript-sdk
           pwd
           npm init -y
           npm install $LATEST_ASSET
           ls -l
-          
-
-
