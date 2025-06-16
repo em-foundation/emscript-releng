@@ -177,7 +177,7 @@ jobs:
           npm install $URL
           for setup in "adi.max326xx://default" "nordic.nrf5x://52-default" "nordic.nrf5x://54-default" "ti.cc23xx://default"
           do
-            for unit in em.etc/em.examples.basic/Ex00_EmptyP.em.ts em.etc/em.examples.basic/Ex02_BlinkerP.em.ts
+            for unit in em.etc/em.benchmark.coremark/ActiveRunnerP.em.ts em.etc/em.benchmark.coremark/SleepyRunnerP.em.ts em.etc/em.examples.basic/Ex00_EmptyP.em.ts em.etc/em.examples.basic/Ex02_BlinkerP.em.ts em.etc/em.examples.combo/Ex03_HelloBlinkerTickerButtonP.em.ts
             do
               pushd workspace
               $(npm prefix)/node_modules/emscript-cli/bin/main.js build --unit $unit -S $setup
