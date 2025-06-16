@@ -21,4 +21,4 @@ jobs:
           pwd
           npm init -y
           npm install $LATEST_ASSET
-          ls -l
+          npm run verify-build
