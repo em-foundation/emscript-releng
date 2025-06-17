@@ -172,15 +172,21 @@ jobs:
           URL=https://github.com/em-foundation/npm-packages/releases/download/resources/em-foundation-emscript-sdk-$VERSION_WITH_TIMESTAMP.tgz
           mkdir testing
           cd testing
-          pwd
           npm init -y
+          echo "Installing $URL in $(pwd) ..."
           npm install $URL
-          for setup in "adi.max326xx://default" "nordic.nrf5x://52-default" "nordic.nrf5x://54-default" "ti.cc23xx://default"
+          export PATH=$(npm prefix)/node_modules/emscript-cli/bin:$PATH
+          echo "Building with $(which emscript) ..."
+          for setup in "adi.max326xx://" "nordic.nrf5x://52-" "nordic.nrf5x://54-" "ti.cc23xx://"
           do
-            for unit in em.etc/em.benchmark.coremark/ActiveRunnerP.em.ts em.etc/em.benchmark.coremark/SleepyRunnerP.em.ts em.etc/em.examples.basic/Ex00_EmptyP.em.ts em.etc/em.examples.basic/Ex02_BlinkerP.em.ts em.etc/em.examples.combo/Ex03_HelloBlinkerTickerButtonP.em.ts
+            for unit in em.benchmark.coremark/ActiveRunnerP em.benchmark.coremark/SleepyRunnerP em.examples.basic/Ex00_EmptyP em.examples.basic/Ex02_BlinkerP em.examples.combo/Ex03_HelloBlinkerTickerButtonP
             do
-              pushd workspace
-              $(npm prefix)/node_modules/emscript-cli/bin/main.js build --unit $unit -S $setup
-              popd
+              for memory in default
+              do
+                pushd workspace
+                emscript build --unit em.etc/${unit}.em.ts -S ${setup}${memory}
+                popd
+              done
             done
           done 
+          echo "Testing complete"
