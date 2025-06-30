@@ -177,16 +177,16 @@ jobs:
           npm install $URL
           export PATH=$(npm prefix)/node_modules/emscript-cli/bin:$PATH
           echo "Building with $(which emscript) ..."
+          pushd workspace > /dev/null
           for setup in "adi.max326xx://" "nordic.nrf5x://52-" "nordic.nrf5x://54-" "ti.cc23xx://"
           do
             for unit in em.benchmark.coremark/ActiveRunnerP em.benchmark.coremark/SleepyRunnerP em.examples.basic/Ex00_EmptyP em.examples.basic/Ex02_BlinkerP em.examples.combo/Ex03_HelloBlinkerTickerButtonP
             do
-              for memory in flash sram
+              for memory in default
               do
-                pushd workspace
                 emscript build --unit em.etc/${unit}.em.ts -S ${setup}${memory}
-                popd
               done
             done
           done 
+          popd > /dev/null
           echo "Testing complete"
