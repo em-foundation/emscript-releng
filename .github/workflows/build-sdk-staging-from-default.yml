@@ -182,7 +182,7 @@ jobs:
           do
             for unit in em.benchmark.coremark/ActiveRunnerP em.benchmark.coremark/SleepyRunnerP em.examples.basic/Ex00_EmptyP em.examples.basic/Ex02_BlinkerP em.examples.combo/Ex03_HelloBlinkerTickerButtonP
             do
-              for memory in default
+              for memory in flash
               do
                 emscript build --unit em.etc/${unit}.em.ts -S ${setup}${memory}
               done
