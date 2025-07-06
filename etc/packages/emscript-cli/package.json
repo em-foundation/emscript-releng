@@ -5,10 +5,12 @@
         "emscript": "./bin/main.js"
     },
     "dependencies": {
+        "@prantlf/railroad-diagrams": "^1.0.1",
         "@types/js-yaml": "^4.0.9",
         "@types/sprintf-js": "^1.1.4",
         "@types/xml2js": "^0.4.14",
         "commander": "^8.3.0",
+        "he": "^1.2.0",
         "json5": "^2.2.3",
         "js-yaml": "^4.1.0",
         "sprintf-js": "^1.1.3",
