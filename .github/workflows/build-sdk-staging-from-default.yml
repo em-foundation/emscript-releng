@@ -82,7 +82,8 @@ jobs:
           mkdir -p bin
           cp $GITHUB_WORKSPACE/emscript-tools/out/cli/Main.js bin/main.js
           cp $GITHUB_WORKSPACE/emscript-tools/out/cli/bin/emscript bin/
-          cp $GITHUB_WORKSPACE/emscript-tools/etc/grammar-tracks/grammar.css bin/          
+          mkdir -p etc/grammar-tracks
+          cp $GITHUB_WORKSPACE/emscript-tools/etc/grammar-tracks/grammar.css etc/grammar-tracks/
           chmod +x bin/{main.js,emscript}
           npm pack .
           mv emscript-cli-${{ steps.date.outputs.version }}.tgz emscript-cli-$VERSION_WITH_TIMESTAMP.tgz
