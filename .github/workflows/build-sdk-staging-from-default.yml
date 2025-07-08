@@ -106,6 +106,7 @@ jobs:
           npm version --git-tag-version=false --allow-same-version=true ${{ steps.date.outputs.version }}
           npm run build-ext
           sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/ext/extension.js
+          node out/cli/Main.js grammar -o etc/
           npx vsce package
           popd
           rm -f emscript-sdk/emscript*.vsix
