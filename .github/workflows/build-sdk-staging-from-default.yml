@@ -66,16 +66,19 @@ jobs:
           cp emscript-content/.clang-format emscript-sdk/
           cp emscript-content/tsconfig.base.json emscript-sdk/
 
-      - name: Build emscript cli
+      - name: Build emscript cli and bue
         run: |
           VERSION_WITH_TIMESTAMP=${{ steps.date.outputs.version }}.${{ steps.date.outputs.date }}
           pushd emscript-tools
           npm install
           npm run build-cli
+          npm run build-bue
+          mv out/bue/Main.js out/bue/embue
           npm run postbuild
           npm run cli-executable
           sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/cli/Main.js
           sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/cli/bin/emscript
+          sed -i "s/@VERS/$VERSION_WITH_TIMESTAMP/" out/bue/embue
           mkdir build
           cp -r $GITHUB_WORKSPACE/emscript-releng/etc/packages/emscript-cli build/
           pushd build/emscript-cli
@@ -84,7 +87,8 @@ jobs:
           cp $GITHUB_WORKSPACE/emscript-tools/out/cli/Main.js bin/main.js
           cp $GITHUB_WORKSPACE/emscript-tools/out/cli/grammar.css bin/
           cp $GITHUB_WORKSPACE/emscript-tools/out/cli/bin/emscript bin/
-          chmod +x bin/{main.js,emscript}
+          cp $GITHUB_WORKSPACE/emscript-tools/out/bue/embue bin/
+          chmod +x bin/{main.js,emscript,embue}
           npm pack .
           mv emscript-cli-${{ steps.date.outputs.version }}.tgz emscript-cli-$VERSION_WITH_TIMESTAMP.tgz
           popd
