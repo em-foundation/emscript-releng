@@ -1,4 +1,4 @@
-name: Build emscript-sdk staging from dev
+name: Build emscript-sdk to staging
 
 on:
   workflow_dispatch:
