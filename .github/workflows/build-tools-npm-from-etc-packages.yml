@@ -1,6 +1,9 @@
 name: Build tools npm packages from /etc/packages
 
 on:
+  push:
+    branches:
+      - dev
   workflow_dispatch:
 
 jobs:
