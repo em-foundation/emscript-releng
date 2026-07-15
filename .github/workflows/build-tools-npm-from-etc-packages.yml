@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Checkout emscript-releng
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: emscript-releng
           token: ${{ secrets.token }}
