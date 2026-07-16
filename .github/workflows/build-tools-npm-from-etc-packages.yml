@@ -46,9 +46,10 @@ jobs:
           done
 
       - name: Upload tools packages to npm-packages/resources
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: ${{ steps.params.outputs.NPM }}/*.tgz
           repository: em-foundation/npm-packages
           token: ${{ secrets.token }}
           tag_name: resources
+          overwrite_files: false
