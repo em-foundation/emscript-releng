@@ -11,6 +11,7 @@ Suggest the following for generating the zip file:
     - gcc/arm-none-eabi
     - include
     - lib
+- Make sure that the files in `SES-abridged/bin` and `SES-abridged/gcc/arm-none-eabi/bin` have executable permissions (e.g. `chmod +x bin/*` them)
 - Add the extra six files to the SES-abridged/lib folder:
     - libc_v6m_t_le_eabi_balanced.a
     - libc_v6m_t_le_eabi_small.a
