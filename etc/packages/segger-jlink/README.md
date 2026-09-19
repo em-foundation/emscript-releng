@@ -8,4 +8,5 @@ Suggest the following for generating the zip file:
 - Create a segger-jlink-abridged folder (name as you see fit)
 - Copy (recursively) the following files from the SEGGER/JLink_Vxxx folder to the segger-jlink-abridged folder
   - JLinkExe or JLink.exe
+  - libjlinkarm.so*  (for example:  .so, .so.8, and .so.8.40)
 - zip up the segger-jlink-abridged folder: `cd segger-jlink-abridged && zip -r ../<zipfile name> *`
