@@ -72,7 +72,7 @@ def package(destination):
         build = directory / "build"
         options = ["-DHAVE_GCRYPT_H=OFF", "-DHAVE_LIBGCRYPT=OFF"]
         if host == "Windows":
-            options += ["-DCMAKE_EXE_LINKER_FLAGS=-static"]
+            options += ["-DCMAKE_EXE_LINKER_FLAGS=-static", "-DCMAKE_CXX_FLAGS=-include cstdint"]
         if host == "Darwin":
             options += ["-DCMAKE_OSX_DEPLOYMENT_TARGET=13.0"]
         run("cmake", "-S", upstream, "-B", build, "-G", "Ninja", *options)

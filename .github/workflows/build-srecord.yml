@@ -26,6 +26,9 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          sparse-checkout: releng/build-srecord.py
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v6
         if: runner.os != 'Windows'
         with:
