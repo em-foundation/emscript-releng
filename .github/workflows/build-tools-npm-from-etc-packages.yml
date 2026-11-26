@@ -26,7 +26,7 @@ jobs:
 
       - name: Build tools npm packages
         run: |
-          for name in segger-arm segger-jlink ti-uniflash
+          for name in segger-arm segger-jlink ti-uniflash srecord
           do
             vers=$(cat ${{ steps.params.outputs.PKGS }}/$name/VERSION)
             root=${{ steps.params.outputs.NPM }}/$name
