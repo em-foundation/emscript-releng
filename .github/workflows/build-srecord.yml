@@ -1,0 +1,62 @@
+name: Build SRecord platform ZIPs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev]
+    paths:
+      - .github/workflows/build-srecord.yml
+      - releng/build-srecord.py
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2022
+            archive: win32-x64
+          - runner: ubuntu-22.04
+            archive: linux-x64
+          - runner: macos-15
+            archive: darwin-arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        if: runner.os != 'Windows'
+        with:
+          python-version: '3.12'
+      - uses: msys2/setup-msys2@v2
+        if: runner.os == 'Windows'
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-doxygen
+            mingw-w64-ucrt-x86_64-graphviz
+            mingw-w64-ucrt-x86_64-python
+      - name: Install build tools on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz ninja-build
+      - name: Install build tools on macOS
+        if: runner.os == 'macOS'
+        run: brew install doxygen graphviz ninja
+      - name: Build Windows package
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: python releng/build-srecord.py build/srecord
+      - name: Build Unix package
+        if: runner.os != 'Windows'
+        run: python releng/build-srecord.py build/srecord
+      - uses: actions/upload-artifact@v4
+        with:
+          name: srecord-${{ matrix.archive }}
+          path: build/srecord/${{ matrix.archive }}.zip
+          if-no-files-found: error
