@@ -2,6 +2,8 @@
 
 This package provides the UniFlash 9.2.0 CLI for CC2340R5 and CC2755P10 over XDS110.
 
+Packaging revision 9.2.0-a removes macOS AppleDouble metadata from the Darwin ZIP. DSLite scans the register-ID directory for XML files, so entries such as ._ICEPick_D_regids.xml can prevent target setup from loading.
+
 | Archive | Platform | Validation |
 | --- | --- | --- |
 | win32-x64.zip | Windows x64 | Both boards loaded through Emporium. |
